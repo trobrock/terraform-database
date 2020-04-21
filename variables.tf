@@ -30,6 +30,11 @@ variable "allocated_storage" {
   default     = 10
 }
 
+variable "max_allocated_storage" {
+  description = "The maximum amount of storage to allocate. Setting this enables storage autoscaling"
+  default     = null
+}
+
 variable "backup_retention_period" {
   description = "The length of time in days to retain database backups"
   default     = 7

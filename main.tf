@@ -36,6 +36,7 @@ resource "aws_security_group" "database" {
 
 resource "aws_db_instance" "database" {
   allocated_storage       = var.allocated_storage
+  max_allocated_storage   = var.max_allocated_storage
   backup_retention_period = var.backup_retention_period
   db_subnet_group_name    = aws_db_subnet_group.private.name
   engine                  = "postgres"
