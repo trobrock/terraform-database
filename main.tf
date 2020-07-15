@@ -1,3 +1,7 @@
+locals {
+  port = var.port != null ? var.port : (var.engine == "mysql" ? 3306 : 5432)
+}
+
 resource "aws_db_subnet_group" "private" {
   name       = "${var.name}-database"
   subnet_ids = var.subnets
@@ -13,8 +17,8 @@ resource "aws_security_group" "database" {
   vpc_id = var.vpc_id
 
   ingress {
-    from_port       = var.engine == "mysql" ? 3306 : 5432
-    to_port         = var.engine == "mysql" ? 3306 : 5432
+    from_port       = local.port
+    to_port         = local.port
     protocol        = "tcp"
     security_groups = var.security_groups
   }
@@ -51,4 +55,5 @@ resource "aws_db_instance" "database" {
   vpc_security_group_ids  = [aws_security_group.database.id]
   kms_key_id              = var.enable_encryption ? "${aws_kms_key.key[0].arn}" : null
   storage_encrypted       = var.enable_encryption
+  port                    = local.port
 }

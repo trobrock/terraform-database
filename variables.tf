@@ -69,3 +69,8 @@ variable "enable_encryption" {
   type        = bool
   default     = false
 }
+
+variable "port" {
+  description = "The port to use for the database, omit for engine default"
+  default     = null
+}
