@@ -13,8 +13,8 @@ resource "aws_security_group" "database" {
   vpc_id = var.vpc_id
 
   ingress {
-    from_port       = 5432
-    to_port         = 5432
+    from_port       = var.engine == "mysql" ? 3306 : 5432
+    to_port         = var.engine == "mysql" ? 3306 : 5432
     protocol        = "tcp"
     security_groups = var.security_groups
   }
@@ -39,9 +39,10 @@ resource "aws_db_instance" "database" {
   max_allocated_storage   = var.max_allocated_storage
   backup_retention_period = var.backup_retention_period
   db_subnet_group_name    = aws_db_subnet_group.private.name
-  engine                  = "postgres"
-  engine_version          = var.postgres_version
+  engine                  = var.engine
+  engine_version          = var.engine_version
   instance_class          = var.instance_class
+  identifier              = var.identifier
   name                    = var.name
   password                = var.password
   skip_final_snapshot     = true
