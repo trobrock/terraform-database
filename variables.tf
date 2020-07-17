@@ -6,6 +6,10 @@ variable "vpc_id" {
   description = "The ID of the VPC to launch the database in"
 }
 
+variable "identifier" {
+  description = "The identifier for the RDS instance"
+}
+
 variable "subnets" {
   type        = list(string)
   description = "The list of subnet IDs to make the database available in"
@@ -40,9 +44,14 @@ variable "backup_retention_period" {
   default     = 7
 }
 
-variable "postgres_version" {
-  description = "The version of postgres to run"
+variable "engine_version" {
+  description = "The version of the database engine to run"
   default     = "9.6.11"
+}
+
+variable "engine" {
+  description = "The engine to use (ie postgres or mysql)"
+  default     = "postgres"
 }
 
 variable "instance_class" {
@@ -59,4 +68,9 @@ variable "enable_encryption" {
   description = "A boolean defining whether the storage will be encrypted"
   type        = bool
   default     = false
+}
+
+variable "port" {
+  description = "The port to use for the database, omit for engine default"
+  default     = null
 }
