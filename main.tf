@@ -53,7 +53,7 @@ resource "aws_db_instance" "database" {
   storage_type            = var.storage_type
   username                = var.username
   vpc_security_group_ids  = [aws_security_group.database.id]
-  kms_key_id              = var.enable_encryption ? "${aws_kms_key.key[0].arn}" : null
+  kms_key_id              = var.enable_encryption ? aws_kms_key.key[0].arn : null
   storage_encrypted       = var.enable_encryption
   port                    = local.port
 }
