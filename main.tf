@@ -38,6 +38,17 @@ resource "aws_security_group" "database" {
   }
 }
 
+resource "aws_security_group_rule" "publicly_accessible" {
+  count = var.publicly_accessible ? 1 : 0
+
+  security_group_id = aws_security_group.database.id
+  type              = "ingress"
+  from_port         = local.port
+  to_port           = local.port
+  cidr_blocks       = ["0.0.0.0/0"]
+  protocol          = "tcp"
+}
+
 resource "aws_db_instance" "database" {
   allocated_storage       = var.allocated_storage
   max_allocated_storage   = var.max_allocated_storage
@@ -56,4 +67,5 @@ resource "aws_db_instance" "database" {
   kms_key_id              = var.enable_encryption ? aws_kms_key.key[0].arn : null
   storage_encrypted       = var.enable_encryption
   port                    = local.port
+  publicly_accessible     = var.publicly_accessible
 }

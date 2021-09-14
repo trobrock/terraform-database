@@ -74,3 +74,8 @@ variable "port" {
   description = "The port to use for the database, omit for engine default"
   default     = null
 }
+
+variable "publicly_accessible" {
+  description = "Whether the database should be publicly accessible or not"
+  default     = false
+}
