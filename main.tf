@@ -15,27 +15,35 @@ resource "aws_kms_key" "key" {
 resource "aws_security_group" "database" {
   name   = "${var.name}-database"
   vpc_id = var.vpc_id
+}
 
-  ingress {
-    from_port       = local.port
-    to_port         = local.port
-    protocol        = "tcp"
-    security_groups = var.security_groups
-  }
+resource "aws_security_group_rule" "egress" {
+  security_group_id = aws_security_group.database.id
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
 
-  ingress {
-    from_port = 0
-    to_port   = 0
-    protocol  = "-1"
-    self      = true
-  }
+resource "aws_security_group_rule" "self" {
+  security_group_id = aws_security_group.database.id
+  type              = "ingress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  self              = true
+}
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+resource "aws_security_group_rule" "groups" {
+  for_each = toset(var.security_groups)
+
+  security_group_id        = aws_security_group.database.id
+  type                     = "ingress"
+  from_port                = local.port
+  to_port                  = local.port
+  protocol                 = "tcp"
+  source_security_group_id = each.value
 }
 
 resource "aws_security_group_rule" "publicly_accessible" {
